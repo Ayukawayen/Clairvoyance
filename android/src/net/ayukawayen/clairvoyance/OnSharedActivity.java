@@ -82,7 +82,9 @@ public class OnSharedActivity extends Activity {
 	}
 	
 	private void onDisqusLoaded(String disqusUrlString) {
-		this.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(disqusUrlString)));
+		Intent intent = new Intent();
+		intent.setData(Uri.parse(disqusUrlString));
+		this.startActivity(intent);
 		
 		this.finish();
 	}
