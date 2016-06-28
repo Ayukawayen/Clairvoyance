@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Clairvoyance 求職天眼通</string>
+    <string name="readme">(目前不支援手機版518、yes123)\n\n
+使用說明\n\n
+1. 使用網路瀏覽器開啟工作職缺之網頁。\n\n
+2. 開啟瀏覽器選單，選擇「分享」，於分享目標選擇「Clairvoyance 求職天眼通」。\n\n
+3. 等待討論串開啟於網路瀏覽器之新分頁，於分頁觀看留言或發表留言。\n\n
+</string>
+   
+    <string name="loading">載入中…</string>
+    <string name="err_code_hint">錯誤代碼：</string>
+    <string name="err_url_not_supported">未支援的網址</string>
+    <string name="err_loading">載入時發生錯誤</string>
+    <string name="err_internal">內部執行錯誤</string>
+    <string name="desc_img_ic_alert">Alert Icon</string>
+    
+</resources>

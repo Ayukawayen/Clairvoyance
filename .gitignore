@@ -8,3 +8,4 @@ firefoxExtension/dist/*
 *.xpi
 .tmp
 .DS_Store
+bin
