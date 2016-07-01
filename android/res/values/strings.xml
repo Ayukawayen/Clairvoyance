@@ -12,10 +12,14 @@ https://github.com/Ayukawayen/Clairvoyance/blob/feature/android/android/LICENSE\
 </string>
    
     <string name="loading">載入中…</string>
+    <string name="zeroPost">此職缺尚無評論。\n開啟分頁以發表評論？</string>
+    <string name="open">發表評論</string>
+    
     <string name="err_code_hint">錯誤代碼：</string>
     <string name="err_url_not_supported">未支援的網址</string>
     <string name="err_loading">載入時發生錯誤</string>
     <string name="err_internal">內部執行錯誤</string>
+    
     <string name="desc_img_ic_alert">Alert Icon</string>
     
 </resources>

@@ -17,6 +17,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -25,6 +27,9 @@ public class OnSharedActivity extends Activity {
 	private ProgressBar progressBar;
 	private ImageView imageView;
 	private TextView textView;
+	private Button button;
+	
+	private String disqusUrlString;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -34,15 +39,24 @@ public class OnSharedActivity extends Activity {
 		this.progressBar = (ProgressBar) this.findViewById(R.id.progressBar1);
 		this.imageView = (ImageView) this.findViewById(R.id.imageView1);
 		this.textView = (TextView) this.findViewById(R.id.textView1);
+		this.button = (Button) this.findViewById(R.id.button1);
+		
+		this.button.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				OnSharedActivity.this.openDisqusUrl();
+			}
+		});
 	}
 	
 	@Override
 	protected void onResume() {
 		super.onResume();
 		
-		this.textView.setText(R.string.loading);
+		this.button.setVisibility(View.GONE);
 		this.imageView.setVisibility(View.INVISIBLE);
 		this.progressBar.setVisibility(View.VISIBLE);
+		this.textView.setText(R.string.loading);
 		
 		Intent intent = this.getIntent();
 		if(intent == null) {
@@ -81,13 +95,14 @@ public class OnSharedActivity extends Activity {
 		return null;
 	}
 	
-	private void onDisqusLoaded(String disqusUrlString) {
+	private void openDisqusUrl() {
 		Intent intent = new Intent();
-		intent.setData(Uri.parse(disqusUrlString));
+		intent.setData(Uri.parse(this.disqusUrlString));
 		this.startActivity(intent);
 		
 		this.finish();
 	}
+
 	private void onError(int resId, Integer code) {
 		this.onError(this.getResources().getString(resId), code);
 	}
@@ -95,6 +110,7 @@ public class OnSharedActivity extends Activity {
 		String text = message + (code==null ? "" : "\n"+this.getResources().getString(R.string.err_code_hint)+code);
 		
 		this.textView.setText(text);
+		this.button.setVisibility(View.GONE);
 		this.progressBar.setVisibility(View.INVISIBLE);
 		this.imageView.setVisibility(View.VISIBLE);
 	}
@@ -141,16 +157,39 @@ public class OnSharedActivity extends Activity {
 			
 			try {
 				JSONObject jsonDisqusData = new JSONObject(strDisqusData);
-				String slug = jsonDisqusData.getJSONObject("response").getJSONObject("thread").getString("slug");
-				String disqusUrlString = "https://disqus.com/home/discussion/clv-bakc-end/"+slug+"/";
+				JSONObject jsonThreadData = jsonDisqusData.getJSONObject("response").getJSONObject("thread");
+				int cntPost = jsonThreadData.getInt("posts");
+				String slug = jsonThreadData.getString("slug");
+				OnSharedActivity.this.disqusUrlString = "https://disqus.com/home/discussion/clv-bakc-end/"+slug+"/";
 
-				OnSharedActivity.this.onDisqusLoaded(disqusUrlString);
+				OnSharedActivity.this.runOnUiThread(new OnDisqusLoadedThread(cntPost));
 				
 			} catch (JSONException e) {
 				e.printStackTrace();
 				OnSharedActivity.this.onError(R.string.err_loading, 500);
 				return;
 			}
+		}
+	}
+	
+	private class OnDisqusLoadedThread extends Thread {
+		private int cntPost;
+		
+		public OnDisqusLoadedThread(int cntPost) {
+			this.cntPost = cntPost;
+		}
+		
+		@Override
+		public void run() {
+			if(this.cntPost > 0) {
+				OnSharedActivity.this.openDisqusUrl();
+				return;
+			}
+			
+			OnSharedActivity.this.imageView.setVisibility(View.GONE);
+			OnSharedActivity.this.progressBar.setVisibility(View.GONE);
+			OnSharedActivity.this.textView.setText(R.string.zeroPost);
+			OnSharedActivity.this.button.setVisibility(View.VISIBLE);
 		}
 	}
 }

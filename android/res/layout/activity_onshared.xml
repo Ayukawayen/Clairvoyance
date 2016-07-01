@@ -1,37 +1,54 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="8dp"
-    android:orientation="horizontal" >
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    tools:context="${relativePackage}.${activityClass}" >
 
-    <FrameLayout
+    <LinearLayout
+        android:id="@+id/linearLayout1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical" >
+        android:padding="8dp" >
 
-        <ProgressBar
-            android:id="@+id/progressBar1"
+        <FrameLayout
+            android:id="@+id/frameLayout1"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content" >
 
-        <ImageView
-            android:id="@+id/imageView1"
-            android:contentDescription="@string/desc_img_ic_alert"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:src="@android:drawable/ic_dialog_alert"
-            android:visibility="invisible" />
+            <ProgressBar
+                android:id="@+id/progressBar1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
-    </FrameLayout>
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:contentDescription="@string/desc_img_ic_alert"
+                android:src="@android:drawable/ic_dialog_alert"
+                android:visibility="invisible" />
+        </FrameLayout>
 
-    <TextView
-        android:id="@+id/textView1"
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="@string/loading"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/button1"
+        style="@style/OnSharedButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:text="@string/loading"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:layout_alignLeft="@+id/linearLayout1"
+        android:layout_alignRight="@+id/linearLayout1"
+        android:layout_below="@+id/linearLayout1"
+        android:text="@string/open"
+        android:visibility="visible" />
 
-</LinearLayout>
+</RelativeLayout>
