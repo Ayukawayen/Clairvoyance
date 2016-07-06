@@ -20,4 +20,5 @@
     <style name="OnSharedTheme" parent="@android:style/Theme.Dialog"></style>
     <style name="OnSharedButtonStyle" parent="@android:style/Widget.Button">
     </style>
+    <color name="webview_background">#333</color>
 </resources>

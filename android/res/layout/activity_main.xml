@@ -1,16 +1,51 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/FrameLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="${relativePackage}.${activityClass}" >
 
-        <TextView
-            android:id="@+id/textView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:autoLink="web"
-            android:text="@string/readme"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+    <TabHost
+        android:id="@android:id/tabhost"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
 
-</ScrollView>
+        <LinearLayout
+            android:id="@+id/linearLayout1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <TabWidget
+                android:id="@android:id/tabs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+            </TabWidget>
+
+            <FrameLayout
+                android:id="@android:id/tabcontent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+			
+			    <net.ayukawayen.clairvoyance.DisqusWebView
+			        android:id="@+id/disqusWebView1"
+			        android:layout_width="match_parent"
+			        android:layout_height="match_parent" >
+			    </net.ayukawayen.clairvoyance.DisqusWebView>
+			
+			    <net.ayukawayen.clairvoyance.ScrollTextView
+			        android:id="@+id/scrollTextView1"
+			        android:layout_width="match_parent"
+			        android:layout_height="match_parent" >
+			    </net.ayukawayen.clairvoyance.ScrollTextView>
+			
+			    <net.ayukawayen.clairvoyance.ScrollTextView
+			        android:id="@+id/scrollTextView2"
+			        android:layout_width="match_parent"
+			        android:layout_height="match_parent" >
+			    </net.ayukawayen.clairvoyance.ScrollTextView>
+            </FrameLayout>
+        </LinearLayout>
+    </TabHost>
+
+</FrameLayout>
