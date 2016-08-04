@@ -14,12 +14,18 @@ export default function getPackageInfo(cb) {
 }
 
 function update_packages(cb) {
-    $.get('https://jobhelper.g0v.ronny.tw/api/getpackages', (ret) => {
-        ret.fetch_at = (new Date()).getTime();
-        chrome.storage.local.set({
-            packages: ret
-        }, function() {
-            cb(ret);
-        });
-    }, 'json');
+    let xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+        if (this.readyState == 4) {
+            let ret = JSON.parse(this.responseText);
+            ret.fetch_at = (new Date()).getTime();
+            chrome.storage.local.set({
+                packages: ret
+            }, function() {
+                cb(ret);
+            });
+        }
+    };
+    xhr.open('get', 'https://jobhelper.g0v.ronny.tw/api/getpackages');
+    xhr.send('');
 };

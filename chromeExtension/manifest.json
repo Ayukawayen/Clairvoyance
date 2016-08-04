@@ -9,14 +9,19 @@
     "48": "icon48.png",
     "128": "icon128.png"
   },
+  "applications": {
+    "gecko": {
+      "id": "Clairvoyance@github.com",
+      "strict_min_version": "48.0"
+    }
+  },
   "browser_action": {
     "default_icon": "icon.png",
     "default_popup": "popup.html"
   },
   "options_page": "options.html",
   "background": {
-    "scripts": ["dist/eventPage-bundle.js"],
-    "persistent": false
+    "scripts": ["dist/eventPage-bundle.js"]
   },
   "web_accessible_resources": ["loadfb.js", "loadDisqus.js"],
   "permissions": [

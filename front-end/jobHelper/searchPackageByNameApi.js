@@ -16,35 +16,41 @@ export default function searchPackageByNameApi(name, url, cb, failed_cb) {
             packages.push(id);
         }
         const parsedUrl = parsedPackagedUrl(name, url, packages)
-        $.get(parsedUrl, (ret) => {
-            if (ret.error) {
-                failed_cb(ret.message);
-                return;
-            }
+        let xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (this.readyState == 4) {
+                let ret = JSON.parse(this.responseText);
+                if (ret.error) {
+                    failed_cb(ret.message);
+                    return;
+                }
 
-            var d;
-            let result = []
-            for (var i = 0; i < ret.data.length; i++) {
-                d = ret.data[i];
-                result.push({
-                    package_id: d.package_id,
-                    name: d.name,
-                    date: d.date,
-                    reason: d.reason,
-                    link: d.link,
-                    snapshot: d.snapshot
-                })
+                var d;
+                let result = []
+                for (var i = 0; i < ret.data.length; i++) {
+                    d = ret.data[i];
+                    result.push({
+                        package_id: d.package_id,
+                        name: d.name,
+                        date: d.date,
+                        reason: d.reason,
+                        link: d.link,
+                        snapshot: d.snapshot
+                    })
+                }
+                const sortedResult = result.sort(function(a, b) {
+                    var keyA = new Date(a.date),
+                        keyB = new Date(b.date);
+                    // Compare the 2 dates
+                    if (keyA < keyB) return 1;
+                    if (keyA > keyB) return -1;
+                    return 0;
+                });
+                cb(sortedResult)
             }
-            const sortedResult = result.sort(function(a, b) {
-                var keyA = new Date(a.date),
-                    keyB = new Date(b.date);
-                // Compare the 2 dates
-                if (keyA < keyB) return 1;
-                if (keyA > keyB) return -1;
-                return 0;
-            });
-            cb(sortedResult)
-        }, 'json');
+        };
+        xhr.open('get', parsedUrl);
+        xhr.send('');
     });
 }
 

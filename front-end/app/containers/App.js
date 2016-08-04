@@ -41,7 +41,7 @@ const bindSendLoginRequest = (dispatch) => (e) => {
     chrome.runtime.sendMessage({
         message: "login"
     }, (response) => {
-        chrome.storage.sync.set({
+        chrome.storage.local.set({
             'access_token': response.access_token
         }, () => {
             dispatch(requestLogin(response.access_token))
@@ -57,13 +57,13 @@ class App extends React.Component {
         //     dispatch, user
         // } = this.props
 
-        // chrome.storage.sync.get('access_token', (item) => {
+        // chrome.storage.local.get('access_token', (item) => {
         //     if (!!item['access_token']) {
         //         dispatch(requestLogin(item['access_token']))
         //     }
         // })
         
-        // chrome.storage.sync.get('anonymous', (item) => {
+        // chrome.storage.local.get('anonymous', (item) => {
         //     if (item['anonymous'] !== undefined) {
         //         if (user.anonymous !== item['anonymous']) {
         //             dispatch(changeUserIdentity())
