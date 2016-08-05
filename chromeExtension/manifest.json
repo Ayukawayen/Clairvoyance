@@ -38,10 +38,13 @@
     "matches": [
       "*://www.104.com.tw/job/*",
       "*://104.com.tw/job/*",
-      "http://www.1111.com.tw/job-bank/job-description*",
-      "http://www.518.com.tw/*-job-*.html",
-      "*://www.yes123.com.tw/admin/job_refer_comp_job_detail2.asp*",
-      "http://www.1111.com.tw//job-bank/job-description*"
+      "*://m.104.com.tw/job/*",
+      "*://www.1111.com.tw/job-bank/job-description*",
+      "*://www.1111.com.tw//job-bank/job-description*",
+      "*://www.1111.com.tw/mobileWeb/job-description.asp?*",
+      "*://www.518.com.tw/*-job-*.html",
+      "*://m.518.com.tw/job-detail-*.html",
+      "*://www.yes123.com.tw/admin/job_refer_comp_job_detail2.asp*"
     ],
     "js": [
       "./dist/content-bundle.js"

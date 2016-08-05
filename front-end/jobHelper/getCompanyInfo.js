@@ -4,7 +4,7 @@ export default function getCompanyInfo (){
     var params = {};
     params.link = document.location.href;
 
-    if ('www.104.com.tw' == document.location.hostname) {
+    if ('www.104.com.tw' == document.location.hostname || '104.com.tw' == document.location.hostname) {
         // 有 jquery($) 可以用
         var company_dom = $('#comp_header li.comp_name p a', document);
         if (company_dom.length != 0) {
@@ -66,6 +66,30 @@ export default function getCompanyInfo (){
         }
         
         return;
+    } else if ('m.104.com.tw' == document.location.hostname) {
+        // 有 jquery($) 可以用
+        if (document.location.pathname.match('\/cust\/')) {
+            company_dom = $('header h1.title', document);
+            if (company_dom.length != 0) {
+                params.from = '104-2';
+                params.name = company_dom.text();
+                params.company_link = document.location;
+                return params;
+            }
+        }
+        
+        if (document.location.pathname.match('\/job\/')) {
+            // http://m.104.com.tw/job/3lluq
+            company_dom = $('h2.company a:first', document);
+            if (company_dom.length != 0) {
+                params.from = '104-3';
+                params.name = company_dom.eq(0).text();
+                params.company_link = company_dom.eq(0).attr('href');
+                return params;
+            }
+        }
+        
+        return;
     } else if ('www.taiwanjobs.gov.tw' == document.location.hostname) {
         var company_dom = $('#divcontent span:first',document);
         if (company_dom.length != 0) {
@@ -123,16 +147,28 @@ export default function getCompanyInfo (){
             var href = $(this).attr('href');
             if ('string' == typeof(href) && href.match('/job-bank/company-description\.asp\\?nNo=[^&]*')) {
                 params.from = '1111-1';
-        params.name = $(this).text();
-        params.company_link = $(this).attr('href');
-        found = true;
-        return false;
+                params.name = $(this).text();
+                params.company_link = $(this).attr('href');
+                found = true;
+                return false;
             }
         });
         if (found) {
             return params;
         }
 
+        var company_dom = $('#jobcontent ul li h2', document);
+        if (company_dom.length != 0) {
+            params.from = '1111-1';
+            params.name = company_dom.eq(0).text();
+            
+            company_dom = $('#companyDescription', document);
+            if (company_dom.length != 0) {
+                params.company_link = company_dom.eq(0).attr('href');
+            }
+            return params;
+        }
+        
         if ('object' === typeof(vizLayer) && 'string' === typeof(vizLayer.catname)) {
             params.from = '1111-2';
             params.name = vizLayer.catname;
@@ -214,6 +250,21 @@ export default function getCompanyInfo (){
         params.from = '518-5';
         params.name = dom.text();
         params.company_link = dom.attr('href');
+    } else if ('m.518.com.tw' == document.location.hostname) {
+        var dom = $('.job-info .job_detail span');
+        if (dom.length == 1) {
+            params.from = '518-3';
+            params.name = dom.text().replace(' ', '');
+            return params;
+        }
+        var dom = $('.job-info .comp-name a');
+        if (dom.length == 1) {
+            params.from = '518-5';
+            params.name = dom.text();
+            params.company_link = dom.attr('href');
+            return params;
+        }
+        return;
     } else {
         return;
     }
