@@ -1,5 +1,5 @@
-const get_job_name = () => ((document.querySelector('#commonTop h1')||document.querySelector('#jobcontent h1')).innerText.trim())
-const get_company_name = () => (document.querySelector('#commonTop .navbar a')||document.querySelector('#jobcontent h2')).innerText.trim()
+const get_job_name = () => (document.querySelector('#commonTop h1').innerText.trim())
+const get_company_name = () => document.querySelector('#commonTop .navbar a').innerText.trim()
 const get_eeee_job_no = () =>{
   if (location.search.match(/\?eNo=([0-9]+)/) !== null) {
     return location.search.match(/\?eNo=([0-9]+)/)[1]

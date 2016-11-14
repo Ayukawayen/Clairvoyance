@@ -23,7 +23,7 @@ const bindSendLoginRequest = (dispatch) => (e) => {
     chrome.runtime.sendMessage({
         message: "login"
     }, (response) => {
-        chrome.storage.local.set({
+        chrome.storage.sync.set({
             'access_token': response.access_token
         }, () => {
             dispatch(requestLogin(response.access_token))
@@ -38,7 +38,7 @@ class Options extends React.Component {
         //     dispatch,
         //     user
         // } = this.props
-        // chrome.storage.local.get('access_token', (item) => {
+        // chrome.storage.sync.get('access_token', (item) => {
         //     console.log('item ==>', item);
         //     if (!!item['access_token']) {
         //         dispatch(requestLogin(item['access_token']))
@@ -46,7 +46,7 @@ class Options extends React.Component {
         //         console.log('access token not found');
         //     }
         // })
-        // chrome.storage.local.get('anonymous', (item) => {
+        // chrome.storage.sync.get('anonymous', (item) => {
         //     if (item['anonymous'] !== undefined) {
         //         console.log('item ==>', item['anonymous']);
         //         if (user.anonymous !== item['anonymous']) {
@@ -68,7 +68,7 @@ class Options extends React.Component {
         } = user
         console.log('user.anonymous:' ,user.anonymous);
         const handleChange = () => {
-            chrome.storage.local.set({
+            chrome.storage.sync.set({
                 'anonymous': !(user.anonymous)
             }, () => {
                 dispatch(changeUserIdentity())

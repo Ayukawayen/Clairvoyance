@@ -9,19 +9,14 @@
     "48": "icon48.png",
     "128": "icon128.png"
   },
-  "applications": {
-    "gecko": {
-      "id": "Clairvoyance@github.com",
-      "strict_min_version": "48.0"
-    }
-  },
   "browser_action": {
     "default_icon": "icon.png",
     "default_popup": "popup.html"
   },
   "options_page": "options.html",
   "background": {
-    "scripts": ["dist/eventPage-bundle.js"]
+    "scripts": ["dist/eventPage-bundle.js"],
+    "persistent": false
   },
   "web_accessible_resources": ["loadfb.js", "loadDisqus.js"],
   "permissions": [
@@ -38,13 +33,10 @@
     "matches": [
       "*://www.104.com.tw/job/*",
       "*://104.com.tw/job/*",
-      "*://m.104.com.tw/job/*",
-      "*://www.1111.com.tw/job-bank/job-description*",
-      "*://www.1111.com.tw//job-bank/job-description*",
-      "*://www.1111.com.tw/mobileWeb/job-description.asp?*",
-      "*://www.518.com.tw/*-job-*.html",
-      "*://m.518.com.tw/job-detail-*.html",
-      "*://www.yes123.com.tw/admin/job_refer_comp_job_detail2.asp*"
+      "http://www.1111.com.tw/job-bank/job-description*",
+      "http://www.518.com.tw/*-job-*.html",
+      "*://www.yes123.com.tw/admin/job_refer_comp_job_detail2.asp*",
+      "http://www.1111.com.tw//job-bank/job-description*"
     ],
     "js": [
       "./dist/content-bundle.js"
