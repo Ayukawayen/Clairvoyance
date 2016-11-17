@@ -6,6 +6,7 @@ module.exports = {
     devtool: 'source-map',
     entry: {
         eventPage: './front-end/eventPage.js',
+        laborViolationBackground: './front-end/laborViolationBackground.js',
         popup: './front-end/popup.js',
         content: './front-end/content.js',
         options: './front-end/options.js',

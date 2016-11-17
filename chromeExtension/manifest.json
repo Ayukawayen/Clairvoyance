@@ -15,7 +15,7 @@
   },
   "options_page": "options.html",
   "background": {
-    "scripts": ["dist/eventPage-bundle.js"],
+    "scripts": ["dist/eventPage-bundle.js", "dist/laborViolationBackground-bundle.js"],
     "persistent": false
   },
   "web_accessible_resources": ["loadfb.js", "loadDisqus.js"],
@@ -26,6 +26,7 @@
     "https://ajax.googleapis.com/",
     "http://jobhelper.g0v.ronny.tw/",
     "https://jobhelper.g0v.ronny.tw/",
+    "https://sheets.googleapis.com/",
     "http://www.taiwanjobs.gov.tw/",
     "https://tranquil-fortress-92731.herokuapp.com/"
   ],

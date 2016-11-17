@@ -1,6 +1,7 @@
 import $ from 'jquery'
 import getPackageInfo from './getPackageInfo'
 import getChoosedPackages from './getChoosedPackages'
+import getLaborViolationRecords from './getLaborViolationRecords'
 let _choosed_packages = null;
 let _package_csv = null;
 
@@ -10,6 +11,7 @@ function parsedPackagedUrl(name, url, packages) {
 
 
 export default function searchPackageByNameApi(name, url, cb, failed_cb) {
+    getLaborViolationRecords(name, (records)=>{
     getChoosedPackages((choosed_packages) => {
         let packages = [];
         for (let id in choosed_packages) {
@@ -35,6 +37,21 @@ export default function searchPackageByNameApi(name, url, cb, failed_cb) {
                     snapshot: d.snapshot
                 })
             }
+            
+            result = result.concat(records.filter((record)=>{
+                for (var i = 0; i < ret.data.length; i++) {
+                    d = ret.data[i];
+                    if(d.date != record.date) continue;
+                    
+                    let matchesA = /(\d[8,])/.exec(d.reason);
+                    let matchesB = /(\d[8,])/.exec(record.reason);
+                    
+                    if((matchesA ? matchesA[0] : 0) == (matchesB ? matchesB[0] : 0)) return false;
+                }
+                
+                return true;
+            }));
+            
             const sortedResult = result.sort(function(a, b) {
                 var keyA = new Date(a.date),
                     keyB = new Date(b.date);
@@ -45,6 +62,7 @@ export default function searchPackageByNameApi(name, url, cb, failed_cb) {
             });
             cb(sortedResult)
         }, 'json');
+    });
     });
 }
 
