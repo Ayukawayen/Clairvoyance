@@ -3,7 +3,7 @@
 
     <string name="app_name">Clairvoyance 求職天眼通</string>
     
-    <string name="top_title">最新評論</string>
+    <string name="top_title">Qollie</string>
    
     <string name="readme_title">使用說明</string>
     <string name="readme_content">(目前不支援手機版518、yes123)\n\n
@@ -19,7 +19,7 @@ THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRES
 </string>
     
     <string name="loading">載入中…</string>
-    <string name="zeroPost">此職缺尚無評論。\n開啟分頁以發表評論？</string>
+    <string name="zeroPost">此職缺尚無評論</string>
     <string name="open">發表評論</string>
     
     <string name="err_code_hint">錯誤代碼：</string>

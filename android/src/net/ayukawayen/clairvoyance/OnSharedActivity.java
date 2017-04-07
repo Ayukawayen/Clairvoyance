@@ -1,15 +1,15 @@
 package net.ayukawayen.clairvoyance;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLEncoder;
+
+import javax.net.ssl.HttpsURLConnection;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 
 import net.ayukawayen.clairvoyance.util.UrlC14n;
 import android.app.Activity;
@@ -17,8 +17,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -27,9 +25,8 @@ public class OnSharedActivity extends Activity {
 	private ProgressBar progressBar;
 	private ImageView imageView;
 	private TextView textView;
-	private Button button;
 	
-	private String disqusUrlString;
+	private String jobUrlString = "";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -39,21 +36,12 @@ public class OnSharedActivity extends Activity {
 		this.progressBar = (ProgressBar) this.findViewById(R.id.progressBar1);
 		this.imageView = (ImageView) this.findViewById(R.id.imageView1);
 		this.textView = (TextView) this.findViewById(R.id.textView1);
-		this.button = (Button) this.findViewById(R.id.button1);
-		
-		this.button.setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-				OnSharedActivity.this.openDisqusUrl();
-			}
-		});
 	}
 	
 	@Override
 	protected void onResume() {
 		super.onResume();
 		
-		this.button.setVisibility(View.GONE);
 		this.imageView.setVisibility(View.INVISIBLE);
 		this.progressBar.setVisibility(View.VISIBLE);
 		this.textView.setText(R.string.loading);
@@ -76,7 +64,7 @@ public class OnSharedActivity extends Activity {
 		}
 		
 		try {
-			new LoadDisqusThread(c14nUrlString).start();
+			new LoadApiThread(c14nUrlString).start();
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 			this.onError(R.string.err_internal, 600);
@@ -95,9 +83,9 @@ public class OnSharedActivity extends Activity {
 		return null;
 	}
 	
-	private void openDisqusUrl() {
+	private void openUrl() {
 		Intent intent = new Intent();
-		intent.setData(Uri.parse(this.disqusUrlString));
+		intent.setData(Uri.parse(this.jobUrlString));
 		this.startActivity(intent);
 		
 		this.finish();
@@ -110,86 +98,92 @@ public class OnSharedActivity extends Activity {
 		String text = message + (code==null ? "" : "\n"+this.getResources().getString(R.string.err_code_hint)+code);
 		
 		this.textView.setText(text);
-		this.button.setVisibility(View.GONE);
 		this.progressBar.setVisibility(View.INVISIBLE);
 		this.imageView.setVisibility(View.VISIBLE);
 	}
 	
-	private class LoadDisqusThread extends Thread {
-		private URL embedUrl;
+	private class LoadApiThread extends Thread {
+		private String query; 
 		
-		@SuppressWarnings("deprecation")
-		public LoadDisqusThread(String urlString) throws MalformedURLException {
-			String path;
-			try {
-				path = "embed/comments/?"
-						+ "base=default"
-						+ "&version=abfa4959dc34e1f6ae72ea1155d08c72"
-						+ "&f=clv-bakc-end"
-						+ "&t_u=" + URLEncoder.encode(urlString, "UTF-8")
-						+ "&s_o=default";
-			} catch (UnsupportedEncodingException e) {
-				path = "embed/comments/?"
-						+ "base=default"
-						+ "&version=abfa4959dc34e1f6ae72ea1155d08c72"
-						+ "&f=clv-bakc-end"
-						+ "&t_u=" + URLEncoder.encode(urlString)
-						+ "&s_o=default";
-			}
-			
-			this.embedUrl = new URL("http", "disqus.com", path);
+		public LoadApiThread(String urlString) throws MalformedURLException {
+			this.query = "{\"query\":\"\\nquery getJob(\\n\\t$id: ID\\n\\t$jobLink: String\\n){\\n\\tgetJob(query: {\\n\\t\\tid: $id\\n\\t\\tjobLink: $jobLink\\n\\t}) "
+					+ "{\\n\\t\\t_id\\n\\t\\tcomments}\\n}\\n\","
+					+ "\"variables\":{\"jobLink\":\""
+					+ urlString
+					+ "\"}}";
 		}
 		
 		@Override
 		public void run() {
-			Document doc;
-			
 			try {
-				doc = Jsoup.parse(this.embedUrl, 30000);
-				
-			} catch (IOException e) {
+				this._run();
+			} catch (IOException | JSONException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 				OnSharedActivity.this.onError(R.string.err_loading, 500);
-				return;
+			}
+		}
+		
+		private void _run() throws IOException, JSONException {
+			HttpsURLConnection conn = (HttpsURLConnection) new URL("https", "www.qollie.com", "/graphql").openConnection();
+			
+			conn.setDoInput(true);
+			conn.setDoOutput(true);
+			conn.setRequestMethod("POST");
+			conn.setRequestProperty("Content-Type", "application/json");
+			
+			OutputStream output = conn.getOutputStream();
+			
+			output.write(this.query.getBytes());
+			
+			conn.connect();
+			
+			InputStream input = conn.getInputStream();
+			
+			String result = "";
+			byte[] buffer = new byte[1024];
+			while(true) {
+				int len = input.read(buffer);
+				if(len<=0) {
+					break;
+				}
+				
+				result += new String(buffer, 0, len);
 			}
 			
-			String strDisqusData = doc.select("#disqus-threadData").first().data();
+			JSONObject jsonResult = new JSONObject(result);
+			JSONObject jsonData = jsonResult.getJSONObject("data");
 			
-			try {
-				JSONObject jsonDisqusData = new JSONObject(strDisqusData);
-				JSONObject jsonThreadData = jsonDisqusData.getJSONObject("response").getJSONObject("thread");
-				int cntPost = jsonThreadData.getInt("posts");
-				String slug = jsonThreadData.getString("slug");
-				OnSharedActivity.this.disqusUrlString = "https://disqus.com/home/discussion/clv-bakc-end/"+slug+"/";
+			int cntPost = 0;
+			if(!jsonData.isNull("getJob")) {
+				jsonData = jsonData.getJSONObject("getJob");
+				cntPost = jsonData.getJSONArray("comments").length();
+				String jobId = jsonData.getString("_id");
+				OnSharedActivity.this.jobUrlString = "https://www.qollie.com/jobs/"+jobId+"/";
+			}
 
-				OnSharedActivity.this.runOnUiThread(new OnDisqusLoadedThread(cntPost));
+			OnSharedActivity.this.runOnUiThread(new OnCountLoadedThread(cntPost));
 				
-			} catch (JSONException e) {
-				e.printStackTrace();
-				OnSharedActivity.this.onError(R.string.err_loading, 500);
-				return;
-			}
 		}
 	}
 	
-	private class OnDisqusLoadedThread extends Thread {
+	private class OnCountLoadedThread extends Thread {
 		private int cntPost;
 		
-		public OnDisqusLoadedThread(int cntPost) {
+		public OnCountLoadedThread(int cntPost) {
 			this.cntPost = cntPost;
 		}
 		
 		@Override
 		public void run() {
 			if(this.cntPost > 0) {
-				OnSharedActivity.this.openDisqusUrl();
+				OnSharedActivity.this.openUrl();
 				return;
 			}
 			
 			OnSharedActivity.this.imageView.setVisibility(View.GONE);
 			OnSharedActivity.this.progressBar.setVisibility(View.GONE);
 			OnSharedActivity.this.textView.setText(R.string.zeroPost);
-			OnSharedActivity.this.button.setVisibility(View.VISIBLE);
 		}
 	}
 }

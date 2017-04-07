@@ -28,7 +28,7 @@ public class MainActivity extends TabActivity {
 		this.tabHost.addTab(this.tabHost
 				.newTabSpec("top")
 				.setIndicator(this.getResources().getString(R.string.top_title))
-				.setContent(R.id.disqusWebView1)
+				.setContent(R.id.qollieWebView1)
 		);
 		this.tabHost.addTab(this.tabHost
 				.newTabSpec("license")

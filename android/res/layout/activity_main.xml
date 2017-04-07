@@ -27,11 +27,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" >
 			
-			    <net.ayukawayen.clairvoyance.DisqusWebView
-			        android:id="@+id/disqusWebView1"
+			    <net.ayukawayen.clairvoyance.QollieWebView
+			        android:id="@+id/qollieWebView1"
 			        android:layout_width="match_parent"
 			        android:layout_height="match_parent" >
-			    </net.ayukawayen.clairvoyance.DisqusWebView>
+			    </net.ayukawayen.clairvoyance.QollieWebView>
 			
 			    <net.ayukawayen.clairvoyance.ScrollTextView
 			        android:id="@+id/scrollTextView1"

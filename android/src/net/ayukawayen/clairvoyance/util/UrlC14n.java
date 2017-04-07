@@ -47,7 +47,7 @@ public abstract class UrlC14n {
 			Uri uri = Uri.parse(urlString);
 			String param = uri.getQueryParameter("jobno");
 			
-			return "https://www.104.com.tw/job/?jobno="+param;
+			return "www.104.com.tw/job/?jobno="+param;
 		}
 	}
 	public static class _104m extends UrlC14n {
@@ -64,7 +64,7 @@ public abstract class UrlC14n {
 			Uri uri = Uri.parse(urlString);
 			String param = uri.getLastPathSegment();
 			
-			return "https://www.104.com.tw/job/?jobno="+param;
+			return "www.104.com.tw/job/?jobno="+param;
 		}
 	}
 	public static class _1111 extends UrlC14n {
@@ -81,8 +81,7 @@ public abstract class UrlC14n {
 		protected String c14n(String urlString) {
 			Uri uri = Uri.parse(urlString);
 			String param = uri.getQueryParameter("eNo");
-			
-			return "https://www.1111.com.tw//job-bank/job-description.asp?eNo="+param;
+			return "www.1111.com.tw/job-bank/job-description.asp?eNo="+param;
 		}
 	}
 	public static class _518 extends UrlC14n {
@@ -100,7 +99,7 @@ public abstract class UrlC14n {
 			Uri uri = Uri.parse(urlString);
 			String param = uri.getPath();
 			
-			return "https://www.518.com.tw/"+param;
+			return "www.518.com.tw/"+param;
 		}
 	}
 	public static class _yes123 extends UrlC14n {
@@ -117,7 +116,7 @@ public abstract class UrlC14n {
 			Uri uri = Uri.parse(urlString);
 			String param = uri.getPath() + "/?" + uri.getEncodedQuery();
 			
-			return "https://www.yes123.com.tw/"+param;
+			return "www.yes123.com.tw/"+param;
 		}
 	}
 }
